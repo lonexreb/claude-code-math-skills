@@ -127,11 +127,14 @@ def convert_with_opendataloader(input_path: str, pages: str = None) -> str:
         return "\n\n".join(parts)
 
 
-def convert_with_fallback(input_path: str, pages: str = None) -> str:
+def convert_with_fallback(input_path: str, pages: str = None) -> tuple[str, str]:
     """Fallback when opendataloader-pdf isn't usable.
 
     Prefers pymupdf4llm (markdown with heading detection from font sizes),
     falls back to plain PyMuPDF text extraction (no headings).
+
+    Returns (text, engine_name) so callers can record which engine produced
+    the output for provenance.
     """
     page_range = None
     if pages:
@@ -143,7 +146,7 @@ def convert_with_fallback(input_path: str, pages: str = None) -> str:
         kwargs = {}
         if page_range is not None:
             kwargs["pages"] = page_range
-        return pymupdf4llm.to_markdown(input_path, **kwargs)
+        return pymupdf4llm.to_markdown(input_path, **kwargs), "pymupdf4llm"
     except ImportError:
         pass
 
@@ -167,7 +170,7 @@ def convert_with_fallback(input_path: str, pages: str = None) -> str:
         if text.strip():
             parts.append(f"<!-- Page {page_num + 1} -->\n{text}")
     doc.close()
-    return "\n\n".join(parts)
+    return "\n\n".join(parts), "pymupdf"
 
 
 def clean_markdown(text: str, math_aware: bool = True) -> str:
@@ -287,8 +290,7 @@ def convert_single(input_path: str, output_path: str, pages: str = None,
         text = convert_with_opendataloader(input_path, pages)
     else:
         print("Falling back to PyMuPDF...")
-        text = convert_with_fallback(input_path, pages)
-        engine = "pymupdf"
+        text, engine = convert_with_fallback(input_path, pages)
 
     text = clean_markdown(text, math_aware=math_aware)
 
@@ -339,7 +341,8 @@ def convert_single(input_path: str, output_path: str, pages: str = None,
 def convert_chunked(input_path: str, output_dir: str, chunk_level: int = 1,
                     pages: str = None, math_aware: bool = True,
                     chunk_strategy: str = "section",
-                    do_validate: bool = True):
+                    do_validate: bool = True,
+                    provenance_file: str = None):
     """Convert a PDF and split into per-section .md files.
 
     Args:
@@ -350,14 +353,17 @@ def convert_chunked(input_path: str, output_dir: str, chunk_level: int = 1,
         math_aware: Run LaTeX post-processing. Default True.
         chunk_strategy: One of "section", "theorem", "hybrid". Default "section".
         do_validate: Run quality validation on each chunk. Default True.
+        provenance_file: Optional file to append a single aggregated row to
+            (output: chunk-dir + manifest, score: mean across chunks).
     """
     print(f"Converting + chunking: {input_path}")
 
+    engine = "opendataloader"
     if check_dependencies():
         text = convert_with_opendataloader(input_path, pages)
     else:
         print("Falling back to PyMuPDF...")
-        text = convert_with_fallback(input_path, pages)
+        text, engine = convert_with_fallback(input_path, pages)
 
     text = clean_markdown(text, math_aware=math_aware)
 
@@ -371,6 +377,8 @@ def convert_chunked(input_path: str, output_dir: str, chunk_level: int = 1,
     book_name = Path(input_path).stem
 
     manifest = []
+    scores = []
+    score_counts = {"PASS": 0, "REVIEW": 0, "FAIL": 0}
     for heading, content in chunks:
         if not content.strip():
             continue
@@ -386,7 +394,9 @@ def convert_chunked(input_path: str, output_dir: str, chunk_level: int = 1,
         # Validate each chunk
         if do_validate and validate_file is not None:
             report = validate_file(fpath)
+            scores.append(report.score)
             status = "PASS" if report.score >= 0.9 else ("REVIEW" if report.score >= 0.7 else "FAIL")
+            score_counts[status] += 1
             print(f"    Quality: {report.score:.2f} ({status})")
 
     # Write manifest
@@ -394,6 +404,7 @@ def convert_chunked(input_path: str, output_dir: str, chunk_level: int = 1,
     with open(manifest_path, 'w') as f:
         f.write(f"# {book_name} — Chunk Manifest\n\n")
         f.write(f"Strategy: {chunk_strategy}\n\n")
+        f.write(f"Engine: {engine}\n\n")
         f.write("| File | Section | Size (KB) |\n")
         f.write("|------|---------|----------|\n")
         for fname, heading, size in manifest:
@@ -401,6 +412,24 @@ def convert_chunked(input_path: str, output_dir: str, chunk_level: int = 1,
 
     print(f"\nManifest: {manifest_path}")
     print(f"Total chunks: {len(manifest)}")
+
+    # Aggregate provenance — one row that captures the whole chunked output.
+    if provenance_file is not None:
+        mean_score = sum(scores) / len(scores) if scores else 1.0
+        chunk_dir_name = os.path.basename(os.path.normpath(output_dir)) or output_dir
+        summary_label = (
+            f"{chunk_dir_name}/ ({len(manifest)} chunks, "
+            f"PASS={score_counts['PASS']} REVIEW={score_counts['REVIEW']} "
+            f"FAIL={score_counts['FAIL']})"
+        )
+        write_provenance(
+            output_path=os.path.join(output_dir, summary_label),
+            input_path=input_path,
+            engine=engine,
+            pages=pages,
+            score=mean_score,
+            provenance_file=provenance_file,
+        )
 
 
 def main():
@@ -451,7 +480,7 @@ def main():
             out_dir = args.output_dir or "references"
             convert_chunked(args.input, out_dir, args.chunk_level, args.pages,
                           math_aware=math_aware, chunk_strategy=args.chunk_strategy,
-                          do_validate=do_validate)
+                          do_validate=do_validate, provenance_file=args.provenance)
         else:
             out_path = args.output or f"references/{Path(args.input).stem}.md"
             convert_single(args.input, out_path, args.pages,
@@ -468,7 +497,8 @@ def main():
                     convert_chunked(fpath, out_dir, args.chunk_level, args.pages,
                                   math_aware=math_aware,
                                   chunk_strategy=args.chunk_strategy,
-                                  do_validate=do_validate)
+                                  do_validate=do_validate,
+                                  provenance_file=args.provenance)
                 else:
                     out_path = os.path.join(out_dir, Path(fname).stem + '.md')
                     convert_single(fpath, out_path, args.pages,
