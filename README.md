@@ -1,5 +1,7 @@
 # claude-code-math-skills
 
+[![ci](https://github.com/lonexreb/claude-code-math-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/lonexreb/claude-code-math-skills/actions/workflows/ci.yml)
+
 A Claude Code harness for solving rigorous math problems with agentic AI.
 
 This repo bundles:

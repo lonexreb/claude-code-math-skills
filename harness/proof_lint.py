@@ -98,8 +98,9 @@ _EXISTS_NAMED = re.compile(
 # --------------------------------------------------------------------------- #
 
 _KINDS_NORMAL = {
-    "theorem": "thm",
-    "thm": "thm",
+    # Map to the slug used by the chunker in references/<book>/<book>-<kind>-<id>.md.
+    "theorem": "theorem",
+    "thm": "theorem",
     "lemma": "lemma",
     "cor": "corollary",
     "corollary": "corollary",
