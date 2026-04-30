@@ -22,7 +22,7 @@ Then `|xₙ| ≤ M` for every `n ≥ 1`. So `(xₙ)` is bounded.
 
 ### Step 2: extract a convergent subsequence
 
-By the Bolzano-Weierstrass theorem on ℝ (Lebl Vol I §2.3 Theorem 2.3.7 — every bounded sequence of real numbers has a convergent subsequence), `(xₙ)` admits a convergent subsequence `(x_{n_k})_{k≥1}` with limit some `x ∈ ℝ`.
+By the Bolzano-Weierstrass theorem on ℝ — every bounded sequence of real numbers has a convergent subsequence — `(xₙ)` admits a convergent subsequence `(x_{n_k})_{k≥1}` with limit some `x ∈ ℝ`. (Lebl Vol I, Thm 2.3.7.)
 
 ### Step 3: the whole sequence converges to `x`
 

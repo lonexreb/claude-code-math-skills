@@ -64,7 +64,7 @@ _CITATION_RE = re.compile(
     (?P<kind>(?:§|Ch\.?\s*|Thm\s*|Theorem\s*|Lemma\s*|Cor\.?\s*|Prop\.?\s*|Definition\s*|Def\.?\s*|Eq\.?\s*))
     \s*
     (?P<id>[0-9]+(?:\.[0-9]+)*[a-z]?)
-    \s*
+    \s*[.,;:]?\s*                # optional trailing punctuation inside the parens
     [\)\]\*]                     # closing ) ] or *
     """,
     re.VERBOSE,

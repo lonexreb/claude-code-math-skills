@@ -29,6 +29,14 @@ The linter surfaces high-frequency mechanical problems:
 
 These are *signals*, not findings — promote each to a real finding only after confirming with the proof text. The linter has no semantic understanding; it might miss subtle problems and might flag false positives. Use it as a fast triage that focuses your line-by-line read.
 
+For any citation flagged as suspicious, also run
+
+```bash
+python3 -m harness.citation_resolve list --proof <proof-file>
+```
+
+to see exactly which chunk file each citation resolves to (or whether it is `UNRESOLVED`). When a citation parses but does not resolve, it usually means either (a) the textbook reference is real but the corresponding chunk wasn't extracted (acceptable — flag MEDIUM, not CRITICAL), or (b) the prover hallucinated the theorem id (CRITICAL). Read the cited chunk if it resolves; if not, sanity-check the surrounding paragraph in the textbook digest under `skills/formal-math-ai/references/` before deciding which case applies.
+
 ## What you check (in order)
 
 ### 1. Quantifier discipline

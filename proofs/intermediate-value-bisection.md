@@ -23,13 +23,13 @@ In either case, `[a_{n+1}, b_{n+1}] ⊆ [a_n, b_n]`, the sign invariants `f(a_{n
 
 **Existence of the common point.** The intervals are nested:
     [a, b] = [a_0, b_0] ⊇ [a_1, b_1] ⊇ [a_2, b_2] ⊇ …,
-each closed and bounded, with `b_n − a_n = (b − a)/2ⁿ → 0`. By the nested-intervals theorem on ℝ (Lebl Vol I §1.3 — a direct consequence of the completeness / least-upper-bound property), there is a unique `c ∈ ⋂_{n≥0} [a_n, b_n]`. Since `[a_n, b_n] ⊆ [a, b]`, we have `c ∈ [a, b]`.
+each closed and bounded, with `b_n − a_n = (b − a)/2ⁿ → 0`. By the nested-intervals theorem on ℝ — a direct consequence of the completeness / least-upper-bound property — there is a unique `c ∈ ⋂_{n≥0} [a_n, b_n]`. (Lebl Vol I, Thm 1.3.7.) Since `[a_n, b_n] ⊆ [a, b]`, we have `c ∈ [a, b]`.
 
 **The value of `f(c)`.** Since `b_n − a_n → 0` and both `a_n, b_n ∈ [a_n, b_n] ∋ c`, we have
     a_n → c   and   b_n → c.
-By continuity of `f` at `c` (Lebl Vol I §3.2 — sequential characterization of continuity),
+By continuity of `f` at `c` and the sequential characterization of continuity (cf. Lebl Vol I §3.2),
     f(a_n) → f(c)   and   f(b_n) → f(c).
-By the sign invariants and the order limit theorem (Lebl Vol I §2.2 Theorem 2.2.5), `f(a_n) ≤ 0` for every `n` gives `f(c) = lim f(a_n) ≤ 0`, and `f(b_n) ≥ 0` for every `n` gives `f(c) = lim f(b_n) ≥ 0`. Hence `f(c) = 0`.
+By the sign invariants and the order limit theorem (Lebl Vol I, Thm 2.2.5), `f(a_n) ≤ 0` for every `n` gives `f(c) = lim f(a_n) ≤ 0`, and `f(b_n) ≥ 0` for every `n` gives `f(c) = lim f(b_n) ≥ 0`. Hence `f(c) = 0`.
 
 **Strict interior.** It remains to show `c ∈ (a, b)`, not merely `c ∈ [a, b]`. Since `f(a) < 0 = f(c)`, we have `f(a) ≠ f(c)`, hence `c ≠ a`. By the analogous comparison with the other endpoint, `f(b) > 0 = f(c)` gives `f(b) ≠ f(c)`, hence `c ≠ b`. Therefore `c ∈ (a, b)`. ∎
 
