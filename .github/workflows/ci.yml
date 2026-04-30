@@ -43,6 +43,23 @@ jobs:
       - name: pytest
         run: pytest -q
 
+      - name: reference proofs lint clean
+        run: |
+          set -e
+          fail=0
+          for p in proofs/*.md; do
+            case "$p" in proofs/README.md) continue;; esac
+            out=$(python -m harness.proof_lint --proof "$p")
+            high=$(python -c "import sys,json; r=json.loads(sys.argv[1]); print(r['summary']['CRITICAL']+r['summary']['HIGH'])" "$out")
+            echo "$p — CRITICAL+HIGH=$high"
+            if [ "$high" != "0" ]; then
+              echo "FAIL: $p has $high CRITICAL/HIGH findings"
+              echo "$out"
+              fail=1
+            fi
+          done
+          exit $fail
+
   validate-benchmarks:
     name: validate benchmark frontmatter
     runs-on: ubuntu-latest

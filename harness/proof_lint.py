@@ -83,7 +83,10 @@ _FILLER_PATTERNS: list[tuple[re.Pattern, str, str]] = [
 ]
 
 # Quantifier introductions that should be present.
-_FORALL_INTRO = re.compile(r"\b(let|fix|consider|take)\b\s+\w", re.I)
+# Allow optional opening quote/bracket characters before the introduced
+# variable so "Fix `c ∈ ℝ`", "Let \"x\" be …", "Consider (xₙ)", and
+# "Take ε > 0" all register as introductions.
+_FORALL_INTRO = re.compile(r"\b(let|fix|consider|take)\b\s+[`'\"\(\[]*\S", re.I)
 _EXISTS_INTRO = re.compile(
     r"(\bthere\s+exists?\b|\bchoose\b|\bpick\b|\b∃\b)",
     re.I,
