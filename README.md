@@ -92,6 +92,7 @@ When the user poses a math problem, the orchestrator routes through agents inste
 | `/math-check <proof>` | Audit-only pass via the critic. |
 | `/math-formalize <proof>` | Lean 4 skeleton emission. |
 | `/math-bench <id\|all>` | Run the harness on benchmark problems and record reproducible reports. |
+| `/math-solve-deep <problem> [--branches N]` | Self-consistency mode: spawns N parallel strategist→prover branches, ranks them by critic verdict, refines the winner. Reserve for hard problems. |
 
 ## Knowledge base
 
