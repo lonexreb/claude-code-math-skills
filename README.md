@@ -107,15 +107,25 @@ To extend: see `skills/formal-math-ai/setup/README.md` for the PDF→markdown in
 
 ## Benchmarks
 
-`benchmarks/problems/` ships with seed problems across domains:
+`benchmarks/problems/` ships with **11 seed problems** across domains:
 
-- `lebl-3-1-7-cauchy-converges.md` — every Cauchy sequence in ℝ converges (textbook classic)
-- `epsilon-delta-continuity.md` — show f(x)=x² is continuous at every point
-- `putnam-2023-a1.md` — combinatorics warm-up
-- `imo-2023-p1.md` — number theory
-- `dominated-convergence-application.md` — Lebesgue + interchange of limits
+| id | domain | difficulty |
+|---|---|---|
+| `epsilon-delta-continuity` | real-analysis | 1 |
+| `sqrt-2-irrational` | number-theory | 1 |
+| `infinitude-of-primes` | number-theory | 1 |
+| `lebl-3-1-7-cauchy-converges` | real-analysis | 2 |
+| `intermediate-value-bisection` | real-analysis | 2 |
+| `cauchy-schwarz-inner-product` | linear-algebra | 2 |
+| `bolzano-weierstrass` | real-analysis | 3 |
+| `banach-fixed-point` | functional-analysis | 3 |
+| `dominated-convergence-application` | measure-theory | 4 |
+| `putnam-2023-a1` | combinatorics | 4 |
+| `imo-2023-p1` | number-theory | 5 |
 
-Run all benchmarks with `/math-bench all`. Reports land in `benchmarks/runs/<id>__<ts>/`.
+Run with `/math-bench <id>` or `/math-bench all`. Reports land in `benchmarks/runs/<id>__<ts>/`.
+
+Hand-written **reference proofs** for four of the seed benchmarks live under `proofs/`. They establish the rigor bar — CI fails if any of them accumulates a CRITICAL or HIGH `proof_lint` finding.
 
 ## Adding more knowledge
 
@@ -129,17 +139,32 @@ The `setup/convert_pdfs.py` pipeline ingests open-access textbook PDFs into theo
 ├── LICENSE                         # MIT (textbook content per SOURCES.md)
 ├── README.md                       # this file
 ├── requirements.txt
+├── pytest.ini
 ├── .claude/
 │   ├── settings.json               # hooks + permission allow-list
 │   ├── agents/                     # 7 math subagents
-│   └── commands/                   # 6 slash commands
+│   └── commands/                   # 8 slash commands (incl. /math-solve-deep, /math-explain)
 ├── skills/
 │   └── formal-math-ai/             # knowledge skill (SKILL.md + references/)
-├── harness/                        # Python helpers (sympy_check, lean_stub, run_bench)
+├── harness/                        # Python helpers
+│   ├── sympy_check.py              # symbolic / numeric smoke tests
+│   ├── lean_stub.py                # Lean 4 + mathlib skeleton emitter
+│   ├── run_bench.py                # /math-bench scaffolding
+│   ├── proof_lint.py               # structural proof linter (citations,
+│   │                               #   filler, quantifier discipline)
+│   └── citation_resolve.py         # resolve "(Lebl, Thm 3.4.5)" → file path
+├── templates/proofs/               # 5 canonical proof skeletons
+├── proofs/                         # hand-written reference proofs (rigor bar)
 ├── benchmarks/
-│   ├── problems/                   # benchmark inputs
+│   ├── problems/                   # 11 benchmark inputs
 │   └── runs/                       # reproducible run reports (gitignored)
-└── docs/
+├── tests/                          # pytest suite (38 tests, py3.10–3.12)
+├── docs/                           # ARCHITECTURE, ROADMAP, COOKBOOK, EXTENDING
+└── .github/
+    ├── workflows/ci.yml            # py_compile + pytest + proof-lint gate
+    │                                  + frontmatter validation
+    ├── ISSUE_TEMPLATE/             # bug, feature, benchmark, agent-tuning
+    └── pull_request_template.md
 ```
 
 ## Status
