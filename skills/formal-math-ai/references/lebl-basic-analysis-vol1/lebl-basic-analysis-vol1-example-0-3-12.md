@@ -1,0 +1,3 @@
+Example 0.3.12
+
+**Example 0.3.12:** From calculus, you are most familiar with functions taking real numbers to real numbers. However, you saw some other types of functions as well. The derivative is Another a function that maps the set of differentiable functions to the set of all functions. example is the Laplace transform, which also takes functions to functions. Yet another example is the function that takes a continuous function _𝑔_ defined on the interval [0 _,_ 1] 1 and returns the number ∫0 _[𝑔]_[(] _[𝑥]_[)] _[ 𝑑𝑥]_[.]

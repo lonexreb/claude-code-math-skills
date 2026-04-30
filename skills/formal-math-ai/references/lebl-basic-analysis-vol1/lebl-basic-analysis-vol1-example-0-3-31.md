@@ -1,0 +1,3 @@
+Example 0.3.31
+
+**Example 0.3.31:** ℕ × ℕ is a countably infinite set. Proof: Arrange the elements of ℕ × ℕ as follows (1 _,_ 1), (1 _,_ 2), (2 _,_ 1), (1 _,_ 3), (2 _,_ 2), (3 _,_ 1), . . . . That is, first write down all the elements whose two entries sum to _𝑘_ , then write down all the elements whose entries sum to _𝑘_ + 1, and so on. Define a bĳection with ℕ by letting 1 go to (1 _,_ 1), 2 go to (1 _,_ 2), and so on. See .

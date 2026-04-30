@@ -1,0 +1,3 @@
+Example 3.3.5
+
+**Example 3.3.5:** The function _𝑓_ : (0 _,_ 1) → ℝ defined by _𝑓_ ( _𝑥_ ) �[1] / _𝑥_ achieves neither a minimum, nor a maximum. It is continuous, but (0 _,_ 1) is not closed. The values of the function are unbounded as we approach 0. Also as we approach _𝑥_ = 1, the values of the function approach 1, but _𝑓_ ( _𝑥_ ) _>_ 1 for all _𝑥_ ∈(0 _,_ 1). There is no _𝑥_ ∈(0 _,_ 1) such that _𝑓_ ( _𝑥_ ) = 1. So it is important that we are looking at a closed interval.

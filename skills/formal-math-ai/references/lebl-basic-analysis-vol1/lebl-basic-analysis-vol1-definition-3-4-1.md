@@ -1,0 +1,5 @@
+Definition 3.4.1
+
+**Definition 3.4.1.** Let _𝑆_ ⊂ ℝ, and let _𝑓_ : _𝑆_ → ℝ be a function. Suppose for every _𝜖>_ 0 there exists a _𝛿>_ 0 such that whenever _𝑥, 𝑐_ ∈ _𝑆_ and | _𝑥_ − _𝑐_ | _< 𝛿_ , then �� _𝑓_ ( _𝑥_ ) − _𝑓_ ( _𝑐_ )�� _< 𝜖_ . Then we say _𝑓_ is _uniformly continuous_ .
+
+A uniformly continuous function must be continuous. The only difference in the definitions is that in uniform continuity, for a given _𝜖>_ 0 we pick a _𝛿>_ 0 that works for all _𝑐_ ∈ _𝑆_ . That is, _𝛿_ can no longer depend on _𝑐_ , it only depends on _𝜖_ . The domain of definition of the function makes a difference now. A function that is not uniformly continuous on a larger set, may be uniformly continuous when restricted to a smaller set. Note that _𝑥_ and _𝑐_ are not treated any differently in this definition.
