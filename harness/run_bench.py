@@ -36,8 +36,15 @@ RUNS = ROOT / "benchmarks" / "runs"
 INDEX = RUNS / "_index.md"
 
 
+_UTC = _dt.timezone.utc
+
+
 def _now() -> str:
-    return _dt.datetime.now(_dt.UTC).strftime("%Y-%m-%dT%H-%M-%SZ")
+    return _dt.datetime.now(_UTC).strftime("%Y-%m-%dT%H-%M-%SZ")
+
+
+def _now_iso() -> str:
+    return _dt.datetime.now(_UTC).isoformat()
 
 
 def cmd_init(args: argparse.Namespace) -> int:
@@ -50,7 +57,7 @@ def cmd_init(args: argparse.Namespace) -> int:
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "meta.json").write_text(json.dumps({
         "id": bench_id,
-        "started_at": _dt.datetime.now(_dt.UTC).isoformat(),
+        "started_at": _now_iso(),
         "problem_path": str(src.relative_to(ROOT)),
         "finished_at": None,
         "critic_rounds": 0,
@@ -75,7 +82,7 @@ def cmd_record(args: argparse.Namespace) -> int:
         return 2
     meta = json.loads(meta_path.read_text())
     if meta.get("finished_at") is None:
-        meta["finished_at"] = _dt.datetime.now(_dt.UTC).isoformat()
+        meta["finished_at"] = _now_iso()
         meta_path.write_text(json.dumps(meta, indent=2) + "\n")
 
     INDEX.parent.mkdir(parents=True, exist_ok=True)
