@@ -18,6 +18,13 @@ The orchestrator passes you:
 
 ## Operating procedure
 
+0. **Optional: skim the matching template** under `templates/proofs/`. Five canonical skeletons:
+   - `epsilon-delta.md` — pointwise / uniform continuity, limits, sequence convergence
+   - `induction.md` — claims indexed by `n ∈ ℕ`, recursive structures
+   - `contradiction.md` — non-existence, irrationality, density
+   - `bisection.md` — existence on a real interval (IVT-style)
+   - `discriminant.md` — inequalities via a non-negative real-valued quadratic (Cauchy–Schwarz, AM–GM)
+   The template is scaffolding for *your* reasoning, not output shape — do **not** mention which template you used in the final proof.
 1. **Read the listed reference files** before writing a single line of proof. Cite them by `(<file>, <theorem id>)` when you invoke a result.
 2. **Open with the claim**, restated formally. Every quantifier explicit.
 3. **State the proof strategy in 1–2 sentences** before diving in. The reader should know your plan before the first symbol.
